@@ -1,30 +1,39 @@
 const Koa = require("koa");
+const Router = require("koa-router");
 
 const app = new Koa();
+const router = new Router();
+const usersRouter = new Router({ prefix: "/users" });
 
-// app.use(async (ctx, next) => {
-// 	await next();
-// 	console.log(1);
-// 	ctx.body = "hello zhihuApi";
-// });
-
-app.use(async (ctx) => {
-	if (ctx.url === "/") {
-		ctx.body = "这是主页";
-	} else if (ctx.url === "/users") {
-		if (ctx.method === "GET") {
-			ctx.body = "这是用户列表页";
-		} else if (ctx.method === "POST") {
-			ctx.body = "创建用户";
-		} else {
-			ctx.status = 405; // 请求的方式不对
-		}
-	} else if (ctx.url.match(/\/users\/\w+/)) {
-		const userId = ctx.url.match(/\/users\/(\w+)/)[1];
-		ctx.body = `这是用户${userId}`;
-	} else {
-		ctx.status = 404;
+// auth中间件---->加一个安全层
+const auth = async (ctx, next) => {
+	if (ctx.url !== "/users") {
+		ctx.throw(401);
 	}
+	await next;
+};
+
+router.get("/", (ctx) => {
+	ctx.body = "这是主页";
 });
+
+router.get("/users", (ctx) => {
+	ctx.body = "这是用户列表";
+});
+
+router.post("/users", (ctx) => {
+	ctx.body = "这是创建用户列表";
+});
+
+router.get("/users/:id",auth, (ctx) => {
+	ctx.body = `这是用户${ctx.params.id}dde`;
+});
+
+usersRouter.get("/zs/12", (ctx) => {
+	ctx.body = `这是用户zs/12`;
+});
+
+app.use(router.routes());
+app.use(usersRouter.routes());
 
 app.listen(3000);
