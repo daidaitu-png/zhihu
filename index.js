@@ -35,5 +35,6 @@ usersRouter.get("/zs/12", (ctx) => {
 
 app.use(router.routes());
 app.use(usersRouter.routes());
+app.use(usersRouter.allowedMethods()); // -->这一步让所有请求支持options请求
 
 app.listen(3000);
