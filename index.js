@@ -18,19 +18,37 @@ router.get("/", (ctx) => {
 });
 
 router.get("/users", (ctx) => {
-	ctx.body = "这是用户列表";
+	ctx.body = [
+		{
+			name: "李磊",
+		},
+		{
+			name: "韩梅梅",
+		},
+	];
 });
 
-router.post("/users", (ctx) => {
-	ctx.body = "这是创建用户列表";
+usersRouter.post("/:id", (ctx) => {
+	ctx.body = {
+		name: "李磊",
+	};
 });
 
-router.get("/users/:id",auth, (ctx) => {
-	ctx.body = `这是用户${ctx.params.id}dde`;
+usersRouter.get("/:id", (ctx) => {
+	ctx.body = {
+		name: "李磊",
+	};
 });
 
-usersRouter.get("/zs/12", (ctx) => {
-	ctx.body = `这是用户zs/12`;
+usersRouter.put("/:id", (ctx) => {
+	ctx.body = {
+		name: "李磊2",
+	};
+});
+
+usersRouter.delete("/:id", (ctx) => {
+	// ctx.body = `这是删除用户${ctx.params.id}`;
+	ctx.status = 204; // 删除成功，但是没内容
 });
 
 app.use(router.routes());
